@@ -62,6 +62,7 @@ export default async function RootLayout({
   return (
     <html lang={locale}>
       <head>
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml"></link>
         <link rel="alternate" type="application/rss+xml" title="Adoptium Blog" href="/rss.xml"></link>
         <GoogleTagManager gtmId="GTM-5WLCZXC" />
         <GoogleAnalytics gaId="G-9HHPS5RX9D" />
