@@ -1,6 +1,6 @@
 ---
-title: Eclipse Temurin JDK 24.0.0+36 enables JEP 493
-date: "2025-03-10"
+title: Eclipse Temurin JDK 24 enables JEP 493
+date: "2025-07-01"
 author: sgehwolf
 description: Eclipse Temurin enables JEP 493 for the JDK 24 general availability release (24.0.0+36) which significantly reduces the size of the JDK archive.
 tags:
@@ -9,13 +9,14 @@ tags:
   - release-notes
 ---
 
-The upcoming release of Eclipse Temurin 24.0.0+36 will have [JEP
-493](https://openjdk.org/jeps/493) enabled. Note: It's disabled by default.
-That is, the JDK 24 release archive of Eclipse Temurin will be about 35%
-smaller. The installed size on-disk will be about 15% smaller. It also means
-that the release no longer includes the `jmods` folder. That folder included
-packaged modules of the JDK and was being used when running the `jlink`
-command.
+The releases of Eclipse Temurin 24.0.0+36 and newer will have [JEP
+493](https://openjdk.org/jeps/493) enabled. Note: This functionality is
+disabled by default for JDK 24 builds and has to be explicitly enabled at build
+time. Since Eclipse Temurin 24 enables the JEP functionality, the JDK 24
+release archive of Eclipse Temurin will be about 35% smaller. The installed
+size on-disk will be about 15% smaller. It also means that the release no
+longer includes the `jmods` folder. That folder included packaged modules of
+the JDK and was being used when running the `jlink` command.
 
 JEP 493 enhances the JDK to use `jlink` without needing the `jmods` folder (or
 packaged modules). `jlink` will work as before for most use-cases. For example,
@@ -70,7 +71,7 @@ Providers:
   java.desktop provides javax.sound.sampled.spi.FormatConversionProvider used by java.desktop
   java.desktop provides javax.sound.sampled.spi.MixerProvider used by java.desktop
   java.logging provides jdk.internal.logger.DefaultLoggerFinder used by java.base
-  java.desktop provides sun.datatransfer.DesktopDatatransferService used by java.datatransfer 
+  java.desktop provides sun.datatransfer.DesktopDatatransferService used by java.datatransfer
 $ ./jdk-24.se-only/bin/java --version
 openjdk 24-beta 2025-03-18
 OpenJDK Runtime Environment Temurin-24+36-202502111438 (build 24-beta+36-ea)
@@ -90,7 +91,7 @@ https://github.com/adoptium/adoptium-support/issues
 This is what JEP 493 changes. Since Eclipse Temurin 24 enables the feature at
 build time, `jlink` will link from the runtime image and will, therefore, no
 longer need JMODs for creating custom runtimes. The user experience is the same
-when using jlink.  One can check with `jlink --help` that JEP 493 is enabled:
+when using jlink. One can check with `jlink --help` that JEP 493 is enabled:
 
 ```bash
 $ ./jdk-24+36/bin/jlink --help | tail -n2
@@ -142,7 +143,7 @@ The relevant upstream OpenJDK change is
 [JDK-8345259](https://bugs.openjdk.org/browse/JDK-8345259). Prior to JDK 24,
 using `--add-modules ALL-MODULE-PATH` was equivalent to `--add-modules
 ALL-MODULE-PATH --module-path $JAVA_HOME/jmods` which essentially meant to
-create a runtime with *all* JDK modules. If this is what you intended to get a
+create a runtime with _all_ JDK modules. If this is what you intended to get a
 "smaller" runtime, then a similar result could be achieved by:
 
 1. Taking a JDK 24 Eclipse Temurin installation, copy it to a new location.
@@ -150,5 +151,55 @@ create a runtime with *all* JDK modules. If this is what you intended to get a
 2. Removing the `src.zip` file from the `lib` folder (~51 MB)
 
 If you are really interested in smaller custom runtimes, however, you should
-not include *all* JDK modules. I.e. consider using explicit modules in
+not include _all_ JDK modules. I.e. consider using explicit modules in
 `--add-modules` clause instead.
+
+### Without JMODs I won't be able to cross-link a platform-foreign JDK
+
+As mentioned in the [JEP's](https://openjdk.org/jeps/493) "Restrictions"
+section, the default JDK tarball download of Eclipse Temurin 24 is not
+sufficient to create a custom runtime for a **different** platform other than
+the one driving `jlink` for the lack of included JMODs. For example, creating a
+runtime on Linux x64 for the Windows x64 platform.
+
+For those use-cases you can download the JMODs for a given Eclipse Temurin
+release via the Adoptium API and use them to generate a JDK for the desired
+platform.
+
+For example, to generate a Windows x64 JDK on Linux x64 you could use the
+following sequence of commands (in a bash terminal):
+
+```bash
+$ mkdir jdk-24.0.2 jdk-24.0.2-win-x64-jmods
+$ curl -OJLs https://api.adoptium.net/v3/binary/latest/24/ga/linux/x64/jdk/hotspot/normal/eclipse # Linux x64 JDK
+$ pushd jdk-24.0.2
+$ tar -xf ../OpenJDK24U-jdk*.tar.gz --strip-components=1
+$ popd
+$ curl -OJLs https://api.adoptium.net/v3/binary/latest/24/ga/windows/x64/jmods/hotspot/normal/eclipse # Windows x64 JMODs
+$ pushd jdk-24.0.2-win-x64-jmods
+$ unzip -d tmp ../OpenJDK24U-jmods*.zip
+$ mv tmp/jdk-24*jmods/*.jmod .
+$ rmdir tmp/jdk-24*jmods
+$ rmdir tmp
+$ popd
+$ pushd jdk-24.0.2
+$ ./bin/jlink --module-path ../jdk-24.0.2-win-x64-jmods \
+            --add-modules ALL-MODULE-PATH \
+            --output ../jdk-24.0.2-x64-win
+$ popd
+$ ./jdk-24.0.2-x64-win/bin/java.exe --version
+./jdk-24.0.2-x64-win/bin/java.exe: cannot execute binary file: Exec format error
+```
+
+This downloads the JDK 24.0.2 general availability release of Eclipse Temurin
+for the x64 Linux platform via the Adoptium API and extracts it using the `tar`
+and `unzip` utilities to folder `jdk-24.0.2`, and `jdk-24.0.2-win-x64-jmods`
+respectively. The JMODs for platform x64 Windows are then available in folder
+`jdk-24.0.2-win-x64-jmods` next to the `jdk-24.0.2` folder for `jlink` to pick
+them up. Then `jlink` from the `jdk-24.0.2` installation is invoked telling it
+to use a module path of `jdk-24.0.2-win-x64-jmods` and adding the
+`ALL-MODULE-PATH` argument to `--add-modules` will tell jlink to use all
+modules from the x64 Windows JMODs and will assemble the x64 Windows JDK in
+folder `jdk-24.0.2-x64-win`. The result in `jdk-24.0.2-x64-win` will of course
+not run on the host platform - x64 Linux. It would need to be transferred to a
+x64 Windows machine for it to be run.
