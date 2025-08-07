@@ -240,8 +240,63 @@ exports[`Index page > renders correctly 1`] = `
     </div>
   </div>
   <div
-    class="w-full h-[1px] my-8 lg:my-16 bg-[#3E3355]"
-  />
+    class="relative w-full"
+  >
+    <div
+      class="w-full h-[1px] my-32 lg:my-16 bg-[#3E3355]"
+    />
+    <div
+      class="absolute w-full top-[-64px]"
+    >
+      <div
+        class="border border-[#3E3355] md:rounded-lg mx-auto  w-full md:max-w-[800px] bg-purple"
+      >
+        <div
+          class="from-[#0E002A] via-[#240b50] to-[#9a227a] py-5 w-full shadow-lg transition-opacity duration-700 opacity-100"
+        >
+          <div
+            class="container mx-auto px-4"
+          >
+            <div
+              class="flex flex-col md:flex-row justify-between items-center relative"
+            >
+              <div
+                class="flex items-center gap-4 mb-3 md:mb-0 pr-8"
+              >
+                <div
+                  class="transform hover:scale-110 transition-transform duration-300"
+                />
+                <div>
+                  <h2
+                    class="text-[16px] md:text-[18px] font-extrabold text-white leading-tight"
+                  >
+                    <span
+                      class="text-primary"
+                    >
+                      Become a sustainer!
+                    </span>
+                  </h2>
+                  <p
+                    class="text-[14px] text-gray-200 mt-1 max-w-2xl"
+                  >
+                    Join the Eclipse Temurin Sustainer Program to support Eclipse Temurin, the fastest-growing open source JDK. Your support fuels stronger security, faster releases, ready-to-deploy builds, quality testing and community development. 
+                    <a
+                      class="text-primary"
+                      href="/sustainers/"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      Learn more!
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div
     class="bg-purple py-16"
   >
