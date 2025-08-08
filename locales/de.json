@@ -4,7 +4,9 @@
     "download-temurin-for": "Temurin {defaultVersion} für {userOSName} {arch} herunterladen",
     "download-temurin-short": "Temurin {defaultVersion} herunterladen",
     "other-downloads": "Andere Downloads",
-    "download-temurin-button": "Temurin® herunterladen"
+    "download-temurin-button": "Temurin® herunterladen",
+    "sustainer-cta-description": "Millionen vertrauen auf Eclipse Temurin. Ihre Unterstützung hält es am Laufen",
+    "sustainer-cta-button": "In Eclipse Temurin reinvestieren"
   },
   "NotFoundPage": {
     "title": "Entschuldigung, wir konnten diese Seite nicht finden",

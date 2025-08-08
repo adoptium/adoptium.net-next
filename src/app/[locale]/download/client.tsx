@@ -4,9 +4,13 @@ import { useSearchParams, redirect } from "next/navigation"
 import { capitalize } from "@/utils/capitalize"
 import PageHeader from "@/components/Common/PageHeader"
 import ImageText from "@/components/ImageText"
+import Cta from "@/components/Cta"
 import Support from "@/components/WorkingGroup/Support"
+import Link from "next/link"
+import { useTranslations } from "next-intl"
 
 export default function DownloadPageClient() {
+    const t = useTranslations("HomePage")
     const searchParams = useSearchParams()
     const link = searchParams.get("link") || "";
     const vendor = searchParams.get("vendor") || "Adoptium";
@@ -63,11 +67,19 @@ export default function DownloadPageClient() {
                                         to start the download.
                                     </>
                                 )}
+            
+            <Cta
+                title="Millions Rely on Eclipse Temurin. Your Support Keeps It Going"
+                description={t("sustainer-cta-description")}
+                linkText={t("sustainer-cta-button")}
+                link="https://adoptium.net/sustainers/"
+            />
                             </>
                         )}
                     </>
                 }
             />
+
             <ImageText
                 title="What to do now?"
                 description="You have successfully downloaded Temurin. For more details on usage and configuration, please take a look at our Installation Guide."

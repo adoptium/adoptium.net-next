@@ -4,7 +4,9 @@
     "download-temurin-for": "下载适用于 {userOSName} {arch} 的 Temurin {defaultVersion}",
     "download-temurin-short": "下载 Temurin {defaultVersion}",
     "other-downloads": "其他下载",
-    "download-temurin-button": "下载 Temurin®"
+    "download-temurin-button": "下载 Temurin®",
+    "sustainer-cta-description": "数百万用户信赖 Eclipse Temurin。您的支持让它持续发展",
+    "sustainer-cta-button": "投资 Eclipse Temurin"
   },
   "NotFoundPage": {
     "title": "很抱歉，无法找到此页面",
