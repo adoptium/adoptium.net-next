@@ -30,3 +30,11 @@ This release contains the following fixes and updates.
 ### Alpine default image now version 3.22
 
 Alpine 3.22 is now the default image when pulling eclipse-temurin Docker images. Previous Alpine versions are still available by specifying a suffix of "-3.21" in Dockerfiles, e.g. `eclipse-temurin:21-alpine-3.21`.
+
+### Ubuntu 20.04 (focal) images are no longer being produced
+
+With Ubuntu 20.04 now out of regular support, we are no longer maintaining container images based on that version
+
+### UBI 10 minimal images are now available
+
+In addition to the ubi9-minimal images which were previously available, we are also publishing images based on ubi10-minimal
